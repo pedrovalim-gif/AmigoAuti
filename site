@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🦊 Amigo Auti - Loja de Amigurumis</title>
+  <meta name="description" content="Amigo Auti - Amigurumis feitos à mão" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* =================== TEMA =================== */
+    :root {
+      --rosa-bebe: #ffd6e8;
+      --rosa-medio: #ff9ecb;
+      --azul-bebe: #cce6ff;
+      --azul-suave: #b3daff;
+      --branco: #ffffff;
+      --texto: #333333;
+      --card-bg: rgba(255,255,255,0.95);
+      --shadow: 0 8px 24px rgba(0,0,0,0.08);
+      --radius: 14px;
+      --max-width: 1200px;
+      --success: #1ebe5c;
+      --danger: #e63946;
+    }
+
+    /* =================== RESET BASE =================== */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      color:var(--texto);
+      background: linear-gradient(180deg,var(--rosa-bebe),var(--azul-bebe));
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .container{ max-width:var(--max-width); margin:0 auto; width:100%; padding:1rem; }
+
+    /* =================== HEADER =================== */
+    header{
+      background: linear-gradient(90deg,var(--rosa-medio),var(--azul-suave));
+      color:var(--branco);
+      padding:.9rem 0;
+      box-shadow:var(--shadow);
+      position:sticky;
+      top:0;
+      z-index:2000;
+      border-bottom-left-radius:18px;
+      border-bottom-right-radius:18px;
+    }
+    header .top{ display:flex; align-items:center; justify-content:space-between; gap:1rem; max-width:var(--max-width); margin:0 auto; padding:0 1rem; }
+    header h1{ margin:0; font-size:1.25rem; display:flex; align-items:center; gap:.6rem; }
+    nav ul{ list-style:none; display:flex; gap:.4rem; padding:0; margin:0; align-items:center; }
+    nav a{ color:var(--branco); text-decoration:none; font-weight:600; padding:.45rem .7rem; border-radius:10px; transition:transform .12s, background .12s; cursor:pointer; }
+    nav a:hover{ transform:translateY(-3px); background: rgba(255,255,255,0.06); }
+
+    /* =================== BANNER / HOME =================== */
+    .banner{
+      display:flex; gap:1.25rem; align-items:center; justify-content:space-between;
+      background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.75));
+      padding:1rem; border-radius:16px; box-shadow:var(--shadow); margin-top:1rem; flex-wrap:wrap;
+    }
+    .banner h2{ margin:0 0 .25rem 0; font-size:1.4rem; }
+    .banner p{ margin:0; opacity:.95; }
+
+    /* =================== VITRINE / PRODUTOS =================== */
+    .produtos { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; margin-top:1rem; }
+    .produto-card{
+      background:var(--card-bg); border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:.5rem; box-shadow:var(--shadow); transition:transform .15s, box-shadow .15s;
+    }
+    .produto-card:hover{ transform:translateY(-6px); box-shadow:0 14px 30px rgba(0,0,0,0.12); }
+    .produto-card img{ width:100%; height:150px; object-fit:cover; border-radius:8px; }
+    .produto-card h3{ margin:.2rem 0 .1rem 0; font-size:1rem; }
+    .produto-card p{ margin:0; font-weight:700; }
+    .produto-meta{ margin-top:auto; display:flex; gap:.5rem; justify-content:center; align-items:center; }
+
+    /* =================== CART / CHECKOUT =================== */
+    #carrinho .cart-list{ list-style:none; padding:0; margin:0; display:grid; gap:.6rem; }
+    .cart-item{ display:flex; justify-content:space-between; gap:.6rem; padding:.6rem; border-radius:10px; background:linear-gradient(180deg,#fff,#fff); box-shadow:0 6px 16px rgba(0,0,0,0.04); align-items:center; }
+    .cart-item small{ opacity:.75; }
+
+    form{ background:var(--card-bg); padding:1rem; border-radius:12px; box-shadow:var(--shadow); }
+    label{ display:block; margin-top:.5rem; font-weight:600; font-size:.95rem; }
+    input, textarea, select{ width:100%; padding:.5rem; margin-top:.25rem; border-radius:8px; border:1px solid rgba(0,0,0,0.08); }
+
+    /* =================== ADMIN =================== */
+    #admin-area table{ width:100%; border-collapse:collapse; margin-top:1rem; border-radius:10px; overflow:hidden; }
+    #admin-area th, #admin-area td{ padding:.6rem; text-align:left; border-bottom:1px solid rgba(0,0,0,0.06); }
+    #admin-area img{ border-radius:6px; }
+
+    /* =================== CHAT =================== */
+    #chatToggle{
+      position:fixed; bottom:20px; right:20px; z-index:9999;
+      width:60px; height:60px; border-radius:50%; border:none;
+      background:linear-gradient(180deg,var(--rosa-medio),var(--azul-suave));
+      color:var(--branco); font-size:24px; cursor:pointer; box-shadow:0 10px 22px rgba(0,0,0,0.16);
+    }
+    #chatBox{
+      position:fixed; right:20px; bottom:100px; width:340px; max-width:calc(100vw - 40px);
+      display:flex; flex-direction:column; border-radius:12px; overflow:hidden; box-shadow:0 18px 40px rgba(0,0,0,0.18); background:var(--card-bg); z-index:9998; display:none;
+    }
+    #chatHeader{ background:linear-gradient(90deg,var(--rosa-medio),var(--azul-suave)); color:var(--branco); padding:.6rem; font-weight:700; display:flex; justify-content:space-between; align-items:center; }
+    #chatMessages{ padding:.8rem; max-height:280px; overflow:auto; display:flex; flex-direction:column; gap:.45rem; }
+    .msg{ max-width:78%; padding:.5rem .7rem; border-radius:10px; background:var(--rosa-bebe); align-self:flex-start; font-size:.92rem; word-break:break-word; }
+    .msg.user{ background:var(--azul-bebe); align-self:flex-end; }
+    .msg.system{ background:#f0f6ff; border:1px solid #d9eaff; align-self:flex-start; }
+    #chatInputArea{ padding:.6rem; display:flex; gap:.5rem; border-top:1px solid rgba(0,0,0,0.04); }
+    #chatInput{ flex:1; padding:.5rem; border-radius:8px; border:1px solid rgba(0,0,0,0.06); }
+    #sendBtn{ padding:.45rem .7rem; border-radius:8px; border:none; cursor:pointer; background:var(--rosa-medio); color:white; font-weight:700; }
+
+    .quick-replies{ display:flex; gap:.4rem; flex-wrap:wrap; margin-top:.45rem }
+    .quick-reply{ background:rgba(0,0,0,0.06); padding:.35rem .6rem; border-radius:999px; cursor:pointer; font-size:.86rem }
+
+    /* =================== TOAST =================== */
+    #toast{ position:fixed; left:50%; transform:translateX(-50%); bottom:30px; z-index:99999; padding:.8rem 1rem; border-radius:10px; display:none; box-shadow:0 10px 26px rgba(0,0,0,0.16); font-weight:700; background:linear-gradient(90deg,var(--rosa-medio),var(--azul-suave)); color:var(--branco) }
+
+    /* =================== FOOTER =================== */
+    footer{ text-align:center; padding:1rem; background:var(--azul-suave); border-top:3px solid var(--rosa-medio); margin-top:2rem; }
+
+    /* =================== VISIBILIDADE PÁGINAS =================== */
+    section, main.page { display:none; }
+    section.active, main.page.active { display:block; }
+
+    /* =================== RESPONSIVO =================== */
+    @media (max-width:900px){
+      header .top{ flex-direction:column; align-items:flex-start; gap:.5rem; }
+      .banner{ flex-direction:column; align-items:flex-start }
+      #chatBox{ width:92vw; right:4%; bottom:110px }
+    }
+
+    /* small helper */
+    .hide{ display:none !important; }
+    .muted{ color:rgba(0,0,0,0.55) }
+    .btn{ background:var(--rosa-medio); color:var(--branco); padding:.5rem .8rem; border-radius:10px; border:none; cursor:pointer; font-weight:700; }
+    .btn.secondary{ background:var(--azul-suave); color:var(--texto); }
+    .btn.ghost{ background:transparent; border:1px solid rgba(0,0,0,0.06); color:var(--texto); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="top container">
+      <h1>🦊 Amigo Auti</h1>
+      <nav aria-label="Principal">
+        <ul>
+          <li><a onclick="mostrarPagina('inicio')">Início</a></li>
+          <li><a onclick="mostrarPagina('produtos')">Produtos</a></li>
+          <li><a onclick="mostrarPagina('carrinho')">Carrinho</a></li>
+          <li><a onclick="mostrarPagina('contato')">Contato</a></li>
+          <li><a onclick="mostrarPagina('admin-login')">Admin</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- INÍCIO -->
+    <section id="inicio" class="active">
+      <div class="banner" role="region" aria-label="Banner inicial">
+        <div class="texto">
+          <h2>Bem-vindo à loja mais fofa do universo!</h2>
+          <p>Amigurumis feitos à mão com carinho e um toque de galáxia ✨</p>
+          <div style="margin-top:.75rem;">
+            <button class="btn" onclick="mostrarPagina('produtos')">Ver Produtos</button>
+            <button class="btn secondary" onclick="mostrarPagina('contato')">Fale Conosco</button>
+          </div>
+        </div>
+        <div style="min-width:220px; max-width:300px;">
+          <h3>✨ Destaques da Semana</h3>
+          <div class="produtos" aria-hidden="true" style="grid-template-columns:1fr;">
+            <div class="produto-card">
+              <img src="https://via.placeholder.com/400x300?text=Estrelinha" alt="Chaveiro Estrelinha">
+              <h3>Chaveiro Estrelinha</h3>
+              <p>R$ 15,00</p>
+              <div class="produto-meta"><button class="btn" onclick="mostrarPagina('produtos')">Comprar</button></div>
+            </div>
+            <div class="produto-card">
+              <img src="https://via.placeholder.com/400x300?text=Polvo" alt="Polvo Reversível">
+              <h3>Polvo Reversível</h3>
+              <p>R$ 35,00</p>
+              <div class="produto-meta"><button class="btn" onclick="mostrarPagina('produtos')">Comprar</button></div>
+            </div>
+            <div class="produto-card">
+              <img src="https://via.placeholder.com/400x300?text=Dragãozinho" alt="Dragãozinho do Cosmos">
+              <h3>Dragãozinho do Cosmos</h3>
+              <p>R$ 75,00</p>
+              <div class="produto-meta"><button class="btn" onclick="mostrarPagina('produtos')">Comprar</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUTOS -->
+    <main id="produtos" class="page">
+      <h2>Todos os Produtos</h2>
+      <div id="vitrine" class="produtos" aria-live="polite">
+        <!-- Produtos fixos embutidos (mantidos) -->
+        <div class="produto-card" data-original="1">
+          <img src="https://via.placeholder.com/400x300?text=Estrelinha" alt="Chaveiro Estrelinha">
+          <h3>Chaveiro Estrelinha</h3>
+          <p>R$ 15,00</p>
+          <div class="produto-meta"><button class="btn" onclick="adicionarAoCarrinho('Chaveiro Estrelinha', 15)">Adicionar</button></div>
+        </div>
+
+        <div class="produto-card" data-original="2">
+          <img src="https://via.placeholder.com/400x300?text=Polvo" alt="Polvo Reversível">
+          <h3>Polvo Reversível</h3>
+          <p>R$ 35,00</p>
+          <div class="produto-meta"><button class="btn" onclick="adicionarAoCarrinho('Polvo Reversível', 35)">Adicionar</button></div>
+        </div>
+
+        <div class="produto-card" data-original="3">
+          <img src="https://via.placeholder.com/400x300?text=Dragãozinho" alt="Dragãozinho do Cosmos">
+          <h3>Dragãozinho do Cosmos</h3>
+          <p>R$ 75,00</p>
+          <div class="produto-meta"><button class="btn" onclick="adicionarAoCarrinho('Dragãozinho do Cosmos', 75)">Adicionar</button></div>
+        </div>
+
+        <!-- Produtos do admin serão injetados dinamicamente -->
+      </div>
+    </main>
+
+    <!-- CARRINHO -->
+    <main id="carrinho" class="page">
+      <h2>🛒 Seu Carrinho</h2>
+      <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:flex-start;">
+        <div style="flex:1; min-width:280px;">
+          <ul id="lista-carrinho" class="cart-list"></ul>
+          <p id="total" class="muted">Total: R$ 0,00</p>
+          <div style="display:flex; gap:.6rem; margin-top:.6rem;">
+            <button class="btn" onclick="limparCarrinho()">Limpar Carrinho</button>
+            <button class="btn secondary" onclick="mostrarPagina('produtos')">Continuar comprando</button>
+          </div>
+        </div>
+
+        <div style="flex:1; min-width:280px;">
+          <form id="form-finalizar" onsubmit="return prepararEnvio(event)" aria-label="Formulário de finalização">
+            <h3>Finalizar Compra</h3>
+            <label for="nomeComprador">Nome:</label>
+            <input type="text" id="nomeComprador" name="nome" required />
+
+            <label for="emailComprador">Email:</label>
+            <input type="email" id="emailComprador" name="email" required />
+
+            <label for="pagamento">Forma de Pagamento:</label>
+            <select id="pagamento" name="pagamento" onchange="mostrarOpcaoPagamento()" required>
+              <option value="">Selecione</option>
+              <option value="credito">Cartão de Crédito</option>
+              <option value="debito">Cartão de Débito</option>
+              <option value="pix">Pix</option>
+            </select>
+
+            <!-- Cartões -->
+            <div id="cartao-container" style="display:none; margin-top:.5rem;">
+              <label for="numeroCartao">Número do Cartão:</label>
+              <input type="text" id="numeroCartao" maxlength="23" placeholder="0000 0000 0000 0000" />
+
+              <label for="validade">Validade (MM/AA):</label>
+              <input type="text" id="validade" maxlength="5" placeholder="MM/AA" />
+
+              <label for="cvv">CVV:</label>
+              <input type="text" id="cvv" maxlength="4" placeholder="123" />
+
+              <hr style="margin:.6rem 0">
+
+              <h4>💳 Cartões Salvos</h4>
+              <div id="cartoesSalvos" style="min-height:36px;"></div>
+
+              <label for="nomeCartao">Nome no Cartão:</label>
+              <input type="text" id="nomeCartao" placeholder="Nome impresso no cartão" />
+
+              <div style="display:flex; gap:.5rem; margin-top:.6rem;">
+                <button type="button" class="btn" onclick="salvarCartao()">Salvar Cartão</button>
+                <button type="button" class="btn secondary" onclick="limparCamposCartao()">Limpar</button>
+              </div>
+            </div>
+
+            <!-- PIX -->
+            <div id="pix-container" style="display:none; margin-top:.5rem;">
+              <label for="tipoPix">Tipo de Pix:</label>
+              <select id="tipoPix" onchange="mostrarPixInfo()">
+                <option value="">Selecione</option>
+                <option value="qrcode">QR Code</option>
+                <option value="copia-e-cola">Copia e Cola</option>
+              </select>
+
+              <div id="qrcodePix" style="display:none; margin-top:1rem;">
+                <p>Escaneie o QR Code para pagar:</p>
+                <img src="https://via.placeholder.com/200x200.png?text=QR+Code+PIX" alt="QR Code Pix">
+              </div>
+
+              <div id="copiaPix" style="display:none; margin-top:1rem;">
+                <p>Chave Pix Copia e Cola:</p>
+                <textarea readonly rows="2" style="width:100%;">pix@amigoauti.com.br</textarea>
+                <small>Copie e cole no seu app bancário.</small>
+              </div>
+            </div>
+
+            <input type="hidden" name="pedido" id="pedido" />
+            <div style="display:flex; gap:.5rem; margin-top:.8rem;">
+              <button type="submit" class="btn">Finalizar Compra</button>
+              <button type="button" class="btn secondary" onclick="mostrarPagina('produtos')">Continuar Comprando</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <!-- CONTATO -->
+    <main id="contato" class="page">
+      <h2>📩 Entre em contato</h2>
+      <form action="https://formspree.io/f/xvgwdyrl" method="POST" style="max-width:720px;">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required />
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
+
+        <label for="mensagem">Mensagem:</label>
+        <textarea id="mensagem" name="mensagem" required></textarea>
+
+        <div style="display:flex; gap:.5rem; margin-top:.6rem;">
+          <button type="submit" class="btn">Enviar</button>
+          <button type="button" class="btn secondary" onclick="mostrarPagina('inicio')">Voltar</button>
+        </div>
+      </form>
+
+      <p style="margin-top:1rem;">Ou fale direto comigo no WhatsApp:</p>
+      <a href="https://wa.me/5554991623372" target="_blank" class="btn">📱 Mandar Mensagem</a>
+    </main>
+
+    <!-- RODAPÉ -->
+    <footer style="margin-top:2rem; border-radius:12px;">
+      <div style="display:flex; gap:1rem; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+        <div style="font-weight:600;">&copy; 2025 🦊 Amigo Auti. Feito com carinho 💜</div>
+        <div>Siga-nos no Instagram:
+          <a href="https://www.instagram.com/amigoauti?igsh=MThudGNncTFneTJwZw==" target="_blank" style="color:#ff4f94; font-weight:bold; margin-left:.4rem">@amigoauti</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ADMIN -->
+  <section id="admin-login" style="display:none;" class="container">
+    <h2>🔐 Login do Administrador</h2>
+    <form onsubmit="return loginAdmin(event)" style="max-width:420px; margin-top:1rem;">
+      <label for="adminUser">Usuário:</label>
+      <input type="text" id="adminUser" required>
+      <label for="adminPass">Senha:</label>
+      <input type="password" id="adminPass" required>
+      <div style="display:flex; gap:.5rem; margin-top:.6rem;">
+        <button class="btn" type="submit">Entrar</button>
+        <button class="btn secondary" type="button" onclick="mostrarPagina('inicio')">Voltar</button>
+      </div>
+    </form>
+  </section>
+
+  <main id="admin-area" style="display:none;" class="container page">
+    <h2>⚙️ Painel Administrativo</h2>
+    <div style="display:flex; gap:1rem; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+      <div>
+        <button class="btn" onclick="logoutAdmin()">Sair</button>
+      </div>
+      <div class="muted">Credenciais padrão: <strong>admin / 1234</strong></div>
+    </div>
+
+    <h3 style="margin-top:1rem;">🧸 Produtos Cadastrados</h3>
+    <table aria-label="Produtos cadastrados">
+      <thead>
+        <tr><th>Imagem</th><th>Nome</th><th>Preço</th><th>Quantidade</th><th>Status</th><th>Ações</th></tr>
+      </thead>
+      <tbody id="tabela-produtos"></tbody>
+    </table>
+
+    <h3 style="margin-top:1rem;">➕ Adicionar / Editar Produto</h3>
+    <form id="form-produto" onsubmit="return salvarProduto(event)" style="max-width:720px;">
+      <input type="hidden" id="produtoId">
+      <label>Nome:</label>
+      <input type="text" id="nomeProduto" required>
+      <label>Imagem (URL):</label>
+      <input type="text" id="imagemProduto" placeholder="https://..." required>
+      <label>Preço (R$):</label>
+      <input type="number" id="precoProduto" step="0.01" required>
+      <label>Quantidade:</label>
+      <input type="number" id="quantidadeProduto" required>
+      <div style="display:flex; gap:.5rem; margin-top:.6rem;">
+        <button type="submit" class="btn">Salvar Produto</button>
+        <button type="button" class="btn secondary" onclick="document.getElementById('form-produto').reset()">Limpar</button>
+      </div>
+    </form>
+  </main>
+
+  <!-- CHAT -->
+  <div id="chatBox" aria-live="polite">
+    <div id="chatHeader">
+      <div>Fale conosco 💬</div>
+      <div style="display:flex; gap:.4rem;">
+        <button class="btn" style="padding:.25rem .5rem; font-size:.78rem;" onclick="abrirWhats()">Whats</button>
+        <button class="btn secondary" style="padding:.25rem .5rem; font-size:.78rem;" onclick="fecharChat()">Fechar</button>
+      </div>
+    </div>
+
+    <div id="chatMessages" role="log" aria-live="polite"></div>
+
+    <div style="padding:.6rem;">
+      <div class="quick-replies" id="quickReplies" aria-hidden="false">
+        <div class="quick-reply" onclick="enviarTextoChat('produtos')">produtos</div>
+        <div class="quick-reply" onclick="enviarTextoChat('entrega')">entrega</div>
+        <div class="quick-reply" onclick="enviarTextoChat('pagamento')">pagamento</div>
+        <div class="quick-reply" onclick="enviarTextoChat('horario')">horario</div>
+      </div>
+
+      <div id="chatInputArea">
+        <input type="text" id="chatInput" placeholder="Digite sua mensagem..." aria-label="Mensagem do chat" />
+        <button id="sendBtn" aria-label="Enviar">➤</button>
+      </div>
+
+      <div style="margin-top:.4rem; display:flex; gap:.4rem;">
+        <a id="whatsLink" href="https://wa.me/5554991623372" target="_blank" class="btn" style="flex:1; text-align:center;">📱 WhatsApp</a>
+        <a href="https://www.instagram.com/amigoauti?igsh=MThudGNncTFneTJwZw==" target="_blank" class="btn secondary" style="flex:1; text-align:center;">📷 Instagram</a>
+      </div>
+    </div>
+  </div>
+
+  <button id="chatToggle" aria-label="Abrir chat">💬</button>
+
+  <!-- TOAST -->
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    /* =================== UTILITÁRIOS =================== */
+    const toastEl = document.getElementById('toast');
+    function showToast(msg, ms=2800){
+      toastEl.textContent = msg;
+      toastEl.style.display = 'block';
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(()=>{ toastEl.style.display='none'; }, ms);
+    }
+    function formatPriceBR(v){ return 'R$ ' + v.toFixed(2).replace('.',','); }
+
+    /* =================== ROTEAMENTO SIMPLES =================== */
+    function mostrarPagina(id){
+      document.querySelectorAll('section, main.page').forEach(el=>{ el.classList.remove('active'); el.style.display='none'; });
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.classList.add('active'); el.style.display = (el.tagName.toLowerCase()==='section' ? 'block' : 'block');
+      if(id === 'carrinho') carregarCartoes();
+      if(id === 'admin-area') carregarProdutosAdmin();
+      if(id === 'produtos') carregarProdutosLoja();
+      window.scrollTo({ top:0, behavior:'smooth' });
+    }
+
+    /* =================== CARRINHO (persistente) =================== */
+    let carrinho = JSON.parse(localStorage.getItem('carrinho') || '[]');
+
+    function salvarCarrinhoLocal(){ localStorage.setItem('carrinho', JSON.stringify(carrinho)); }
+
+    function adicionarAoCarrinho(produto, preco){
+      carrinho.push({ produto, preco });
+      salvarCarrinhoLocal();
+      atualizarCarrinho();
+      showToast('Item adicionado ao carrinho!');
+    }
+
+    function atualizarCarrinho(){
+      const lista = document.getElementById('lista-carrinho');
+      const total = document.getElementById('total');
+      lista.innerHTML = '';
+      let soma = 0;
+      if(carrinho.length === 0){
+        lista.innerHTML = '<li class="muted">Seu carrinho está vazio.</li>';
+      } else {
+        carrinho.forEach((item, i) => {
+          const li = document.createElement('li');
+          li.className = 'cart-item';
+          li.innerHTML = `<div><div style="font-weight:700">${item.produto}</div><small class="muted">${formatPriceBR(item.preco)}</small></div>
+            <div class="actions"><button class="btn secondary" onclick="removerItem(${i})">Remover</button></div>`;
+          lista.appendChild(li);
+          soma += item.preco;
+        });
+      }
+      total.textContent = `Total: ${formatPriceBR(soma)}`;
+    }
+
+    function removerItem(idx){
+      carrinho.splice(idx,1);
+      salvarCarrinhoLocal();
+      atualizarCarrinho();
+      showToast('Item removido.');
+    }
+
+    function limparCarrinho(){
+      carrinho = [];
+      salvarCarrinhoLocal();
+      atualizarCarrinho();
+      const form = document.getElementById('form-finalizar');
+      if(form) form.reset();
+      document.getElementById('cartao-container').style.display = 'none';
+      document.getElementById('pix-container').style.display = 'none';
+      showToast('Carrinho limpo.');
+    }
+
+    /* =================== CHECKOUT =================== */
+    function mostrarOpcaoPagamento(){
+      const pagamento = document.getElementById('pagamento').value;
+      document.getElementById('cartao-container').style.display = 'none';
+      document.getElementById('pix-container').style.display = 'none';
+      if(pagamento === 'credito' || pagamento === 'debito'){
+        document.getElementById('cartao-container').style.display = 'block';
+        carregarCartoes();
+      } else if(pagamento === 'pix') {
+        document.getElementById('pix-container').style.display = 'block';
+      }
+    }
+
+    function mostrarPixInfo(){
+      const tipoPix = document.getElementById('tipoPix').value;
+      document.getElementById('qrcodePix').style.display = 'none';
+      document.getElementById('copiaPix').style.display = 'none';
+      if(tipoPix === 'qrcode') document.getElementById('qrcodePix').style.display = 'block';
+      if(tipoPix === 'copia-e-cola') document.getElementById('copiaPix').style.display = 'block';
+    }
+
+    function prepararEnvio(event){
+      event.preventDefault();
+      if(carrinho.length === 0){
+        showToast('Seu carrinho está vazio!');
+        return false;
+      }
+      const pedido = carrinho.map(i => `${i.produto} - ${formatPriceBR(i.preco)}`).join(', ');
+      document.getElementById('pedido').value = pedido;
+
+      // Aqui você pode descomentar event.target.submit(); para enviar ao Formspree/integrar.
+      showToast('Pedido pronto para envio! Obrigado 😊', 3200);
+
+      // Simulação: limpar carrinho e voltar ao início
+      setTimeout(()=>{ limparCarrinho(); mostrarPagina('inicio'); }, 1200);
+      return false;
+    }
+
+    /* =================== CARTÕES SALVOS =================== */
+    function salvarCartao(){
+      const nome = document.getElementById('nomeCartao').value.trim();
+      const numero = document.getElementById('numeroCartao').value.trim();
+      const validade = document.getElementById('validade').value.trim();
+      if(!nome || !numero || !validade){ showToast('Preencha todos os campos do cartão!'); return; }
+      const cartoes = JSON.parse(localStorage.getItem('cartoesSalvos') || '[]');
+      cartoes.push({ nome, numero, validade });
+      localStorage.setItem('cartoesSalvos', JSON.stringify(cartoes));
+      showToast('Cartão salvo com sucesso!');
+      carregarCartoes();
+    }
+
+    function carregarCartoes(){
+      const container = document.getElementById('cartoesSalvos');
+      const cartoes = JSON.parse(localStorage.getItem('cartoesSalvos') || '[]');
+      container.innerHTML = '';
+      if(cartoes.length === 0){ container.innerHTML = '<p class="muted">Nenhum cartão salvo.</p>'; return; }
+      cartoes.forEach((c,i)=>{
+        const div = document.createElement('div');
+        div.className = 'cartao-salvo';
+        div.style.background = '#ffe6f0';
+        div.style.padding = '8px';
+        div.style.margin = '6px 0';
+        div.style.borderRadius = '8px';
+        div.innerHTML = `<strong>${c.nome}</strong><br> Número: **** **** **** ${String(c.numero).slice(-4)}<br> Validade: ${c.validade}<br>
+          <button class="btn" style="margin-top:6px;" onclick="usarCartao(${i})">Usar este cartão</button>
+          <button class="btn secondary" style="margin-top:6px;" onclick="removerCartao(${i})">Excluir</button>`;
+        container.appendChild(div);
+      });
+    }
+
+    function usarCartao(i){
+      const cartoes = JSON.parse(localStorage.getItem('cartoesSalvos') || '[]');
+      const c = cartoes[i];
+      if(!c){ showToast('Cartão não encontrado.'); return; }
+      document.getElementById('nomeCartao').value = c.nome;
+      document.getElementById('numeroCartao').value = c.numero;
+      document.getElementById('validade').value = c.validade;
+      showToast('Cartão selecionado!');
+    }
+
+    function removerCartao(i){
+      let cartoes = JSON.parse(localStorage.getItem('cartoesSalvos') || '[]');
+      cartoes.splice(i,1);
+      localStorage.setItem('cartoesSalvos', JSON.stringify(cartoes));
+      carregarCartoes();
+      showToast('Cartão excluído.');
+    }
+
+    function limparCamposCartao(){
+      document.getElementById('nomeCartao').value = '';
+      document.getElementById('numeroCartao').value = '';
+      document.getElementById('validade').value = '';
+      document.getElementById('cvv').value = '';
+      showToast('Campos de cartão limpos.');
+    }
+
+    /* =================== CHAT COM FILA (visível em todas as páginas) =================== */
+    const chatToggle = document.getElementById('chatToggle');
+    const chatBox = document.getElementById('chatBox');
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    let chatState = 'idle'; // idle | awaitingQueueDecision | queued
+    let queueTimeoutId = null;
+    const ONE_HOUR_MS = 3600000; // 1 hora real (troque para teste se quiser)
+    // Para testar localmente, você pode alterar ONE_HOUR_MS = 10000 (10s)
+
+    // Persistência do chat (pequeno histórico local)
+    let chatHistory = JSON.parse(localStorage.getItem('chatHistory') || '[]');
+    function salvarHistoria(){ localStorage.setItem('chatHistory', JSON.stringify(chatHistory.slice(-120))); }
+
+    function renderChatHistory(){
+      chatMessages.innerHTML = '';
+      chatHistory.forEach(m=>{
+        const div = document.createElement('div');
+        div.className = 'msg ' + (m.role==='user' ? 'user' : 'system');
+        div.textContent = m.text;
+        chatMessages.appendChild(div);
+      });
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function adicionarMensagem(texto, classe='system', persist=true){
+      const div = document.createElement('div');
+      div.className = 'msg ' + (classe==='user' ? 'user' : classe==='system' ? 'system' : '');
+      div.textContent = texto;
+      chatMessages.appendChild(div);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      if(persist) {
+        chatHistory.push({ role: classe==='user' ? 'user' : 'system', text: texto, when: Date.now() });
+        salvarHistoria();
+      }
+    }
+
+    // Inicializa histórico
+    renderChatHistory();
+
+    // Toggle do chat
+    chatToggle.addEventListener('click', ()=>{
+      chatBox.style.display = chatBox.style.display === 'flex' ? 'none' : 'flex';
+      if(chatBox.style.display === 'flex') chatInput.focus();
+    });
+
+    function fecharChat(){ chatBox.style.display = 'none'; }
+    function abrirWhats(){ window.open('https://wa.me/5554991623372','_blank'); }
+
+    // Enviar por botão ou Enter
+    sendBtn.addEventListener('click', enviarMensagem);
+    chatInput.addEventListener('keypress', (e)=>{ if(e.key === 'Enter'){ e.preventDefault(); enviarMensagem(); } });
+
+    function mensagemInicialResposta(){
+      const texto = `Oi! 😊 Obrigado pela mensagem. Nosso tempo médio de espera é de *1 hora*.
+Deseja entrar na fila de atendimento?
+Digite 1 para SIM ou 2 para NÃO.
+
+Outras opções rápidas:
+- Digite "produtos" para informações sobre produtos.
+- Digite "entrega" para prazos de entrega.
+- Digite "pagamento" para formas de pagamento.
+- Digite "horario" para horário de atendimento.`;
+      adicionarMensagem(texto, 'system');
+      chatState = 'awaitingQueueDecision';
+    }
+
+    function respostasPorPalavraChave(msg){
+      const m = msg.toLowerCase();
+      if(m.includes('produto') || m.includes('produtos')) return `Temos diversos itens: Chaveiro Estrelinha (R$15), Polvo Reversível (R$35), Dragãozinho (R$75). Quer ver a vitrine? Abra a aba "Produtos".`;
+      if(m.includes('entrega') || m.includes('prazo')) return `O prazo de produção e envio costuma ser de 3-7 dias úteis, dependendo da disponibilidade. Quer que eu verifique disponibilidade?`;
+      if(m.includes('pagamento') || m.includes('pix') || m.includes('cartão')) return `Aceitamos Cartão de Crédito/Débito e Pix. No checkout você pode escolher a forma de pagamento.`;
+      if(m.includes('horario') || m.includes('atendimento')) return `Nosso horário de atendimento é das 9h às 18h (dias úteis).`;
+      if(m === '1' || m === '2') return null;
+      return `Desculpe, não entendi completamente. Você pode digitar "produtos", "entrega", "pagamento", "horario" ou digitar 1/2 para entrar/recusar a fila.`;
+    }
+
+    function agendarRespostaFila(){
+      if(queueTimeoutId) clearTimeout(queueTimeoutId);
+      queueTimeoutId = setTimeout(()=>{
+        adicionarMensagem('⏰ Olá! Seu atendimento está pronto agora! Como posso te ajudar?','system');
+        chatState = 'idle';
+        queueTimeoutId = null;
+      }, ONE_HOUR_MS);
+    }
+
+    function enviarMensagem(){
+      const texto = chatInput.value.trim();
+      if(texto === '') return;
+      adicionarMensagem(texto, 'user');
+      chatInput.value = '';
+
+      // Fluxo
+      if(chatState === 'awaitingQueueDecision'){
+        const resposta = texto.toLowerCase();
+        if(resposta === '1' || resposta === 'sim'){
+          adicionarMensagem('Você foi adicionado à fila de atendimento. Por favor, aguarde! 💜', 'system');
+          chatState = 'queued';
+          agendarRespostaFila();
+          return;
+        } else if(resposta === '2' || resposta === 'não' || resposta === 'nao'){
+          adicionarMensagem('Tudo bem! Estaremos por aqui caso precise mais tarde. 💕', 'system');
+          chatState = 'idle';
+          if(queueTimeoutId){ clearTimeout(queueTimeoutId); queueTimeoutId = null; }
+          return;
+        } else {
+          const quick = respostasPorPalavraChave(texto);
+          if(quick){
+            adicionarMensagem(quick, 'system');
+            setTimeout(()=>{ if(chatState === 'awaitingQueueDecision') adicionarMensagem('Deseja entrar na fila de atendimento? Digite 1 para SIM ou 2 para NÃO.','system'); }, 600);
+            return;
+          } else {
+            adicionarMensagem('Por favor, digite 1 para SIM (entrar na fila) ou 2 para NÃO.','system');
+            return;
+          }
+        }
+      }
+
+      if(chatState === 'queued'){
+        const quick = respostasPorPalavraChave(texto);
+        if(quick) adicionarMensagem(quick, 'system');
+        else adicionarMensagem('Sua mensagem foi recebida. Você está na fila de atendimento — assim que seu atendimento ficar pronto (será notificado aqui) responderemos. ✨', 'system');
+        return;
+      }
+
+      if(chatState === 'idle'){
+        if(texto === '1'){ adicionarMensagem('Você foi adicionado à fila de atendimento. Por favor, aguarde! 💜','system'); chatState='queued'; agendarRespostaFila(); return; }
+        if(texto === '2'){ adicionarMensagem('Tudo bem! Estaremos por aqui caso precise mais tarde. 💕','system'); chatState='idle'; return; }
+
+        const quick = respostasPorPalavraChave(texto);
+        if(quick){ adicionarMensagem(quick,'system'); setTimeout(mensagemInicialResposta,700); return; }
+        mensagemInicialResposta();
+        return;
+      }
+    }
+
+    function enviarTextoChat(t){ chatInput.value = t; enviarMensagem(); }
+
+    /* =================== SISTEMA ADMINISTRATIVO =================== */
+    const ADMIN_USER = 'AdminAuti';
+    const ADMIN_PASS = 'Amigo@Auti1234';
+
+    function loginAdmin(event){
+      event.preventDefault();
+      const user = document.getElementById('adminUser').value;
+      const pass = document.getElementById('adminPass').value;
+      if(user === ADMIN_USER && pass === ADMIN_PASS){
+        localStorage.setItem('adminLogado','true');
+        showToast('Administrador logado');
+        mostrarPagina('admin-area');
+        carregarProdutosAdmin();
+      } else {
+        showToast('Usuário ou senha incorretos');
+      }
+      return false;
+    }
+
+    function logoutAdmin(){
+      localStorage.removeItem('adminLogado');
+      mostrarPagina('inicio');
+      showToast('Você saiu do painel administrativo.');
+    }
+
+    /* =================== GERENCIAR PRODUTOS =================== */
+    function salvarProduto(event){
+      event.preventDefault();
+      const id = document.getElementById('produtoId').value;
+      const nome = document.getElementById('nomeProduto').value.trim();
+      const imagem = document.getElementById('imagemProduto').value.trim();
+      const preco = parseFloat(document.getElementById('precoProduto').value);
+      const quantidade = parseInt(document.getElementById('quantidadeProduto').value,10);
+
+      if(!nome || !imagem || isNaN(preco) || isNaN(quantidade)){ showToast('Preencha todos os campos corretamente.'); return false; }
+
+      let produtos = JSON.parse(localStorage.getItem('produtosLoja') || '[]');
+
+      if(id){
+        const index = produtos.findIndex(p => p.id == id);
+        if(index > -1) produtos[index] = { id, nome, imagem, preco, quantidade };
+      } else {
+        const novoId = Date.now();
+        produtos.push({ id: novoId, nome, imagem, preco, quantidade });
+      }
+
+      localStorage.setItem('produtosLoja', JSON.stringify(produtos));
+      showToast('Produto salvo com sucesso!');
+      document.getElementById('form-produto').reset();
+      document.getElementById('produtoId').value = '';
+      carregarProdutosAdmin();
+      carregarProdutosLoja();
+      return false;
+    }
+
+    function carregarProdutosAdmin(){
+      const tabela = document.getElementById('tabela-produtos');
+      const produtos = JSON.parse(localStorage.getItem('produtosLoja') || '[]');
+      tabela.innerHTML = '';
+      produtos.forEach((p)=>{
+        const status = p.quantidade > 0 ? 'Disponível' : 'Esgotado';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td><img src="${p.imagem}" width="60" alt="${p.nome}"></td>
+          <td>${p.nome}</td>
+          <td>${formatPriceBR(p.preco)}</td>
+          <td>${p.quantidade}</td>
+          <td>${status}</td>
+          <td><button class="btn" onclick="editarProduto(${p.id})">✏️</button> <button class="btn secondary" onclick="excluirProduto(${p.id})">🗑️</button></td>`;
+        tabela.appendChild(tr);
+      });
+    }
+
+    function editarProduto(id){
+      const produtos = JSON.parse(localStorage.getItem('produtosLoja') || '[]');
+      const p = produtos.find(p => p.id == id);
+      if(!p) return;
+      document.getElementById('produtoId').value = p.id;
+      document.getElementById('nomeProduto').value = p.nome;
+      document.getElementById('imagemProduto').value = p.imagem;
+      document.getElementById('precoProduto').value = p.preco;
+      document.getElementById('quantidadeProduto').value = p.quantidade;
+      mostrarPagina('admin-area');
+      window.scrollTo({ top: document.getElementById('form-produto').offsetTop, behavior:'smooth' });
+    }
+
+    function excluirProduto(id){
+      if(!confirm('Tem certeza que deseja excluir este produto?')) return;
+      let produtos = JSON.parse(localStorage.getItem('produtosLoja') || '[]');
+      produtos = produtos.filter(p => p.id != id);
+      localStorage.setItem('produtosLoja', JSON.stringify(produtos));
+      carregarProdutosAdmin();
+      carregarProdutosLoja();
+      showToast('Produto excluído.');
+    }
+
+    function carregarProdutosLoja(){
+      const container = document.getElementById('vitrine');
+      if(!container) return;
+      const produtos = JSON.parse(localStorage.getItem('produtosLoja') || '[]');
+      produtos.forEach(p => {
+        if(container.querySelector(`[data-id="${p.id}"]`)) return;
+        const esgotado = p.quantidade <= 0;
+        const div = document.createElement('div');
+        div.className = 'produto-card';
+        div.setAttribute('data-id', p.id);
+        div.innerHTML = `<img src="${p.imagem}" alt="${p.nome}"><h3>${p.nome}</h3><p>${formatPriceBR(p.preco)}</p>
+          <div class="produto-meta">${esgotado ? "<span style='color:red; font-weight:700;'>Esgotado</span>" : `<button class="btn" onclick="adicionarAoCarrinho('${p.nome.replace(/'/g,"\\'")}', ${p.preco})">Adicionar</button>`}</div>`;
+        container.appendChild(div);
+      });
+    }
+
+    /* =================== PRODUTOS FIXOS (exemplo) =================== */
+    // Também incluí uma lista inicial de produtos para demonstrar; admin pode adicionar mais.
+    const produtosIniciais = [
+      { nome: "Raposinha Fofa", preco: 79.90, img: "https://i.imgur.com/5uCzK9Z.png" },
+      { nome: "Coelhinho Rosa", preco: 69.90, img: "https://i.imgur.com/Xqk92xZ.png" },
+      { nome: "Urso Azul", preco: 89.90, img: "https://i.imgur.com/7m6oXzN.png" },
+      { nome: "Gatinho Sonhador", preco: 74.90, img: "https://i.imgur.com/Y5Yz5gM.png" }
+    ];
+
+    function popularProdutosIniciais(){
+      // Se não houver produtos em localStorage, adiciona alguns de exemplo
+      let produtos = JSON.parse(localStorage.getItem('produtosLoja') || '[]');
+      if(produtos.length === 0){
+        produtos = produtosIniciais.map((p, idx) => ({ id: Date.now() + idx, nome: p.nome, imagem: p.img, preco: p.preco, quantidade: 10 }));
+        localStorage.setItem('produtosLoja', JSON.stringify(produtos));
+      }
+    }
+
+    /* =================== INICIALIZAÇÃO =================== */
+    window.addEventListener('load', ()=>{
+      popularProdutosIniciais();
+
+      const adminLogado = localStorage.getItem('adminLogado') === 'true';
+      if(adminLogado) mostrarPagina('admin-area'); else mostrarPagina('inicio');
+
+      carregarProdutosLoja();
+      atualizarCarrinho();
+      carregarCartoes();
+      renderChatHistory();
+
+      // Mantém chat visível (inicialmente escondido)
+      // showToast('Bem-vindo — site carregado!');
+    });
+
+    /* =================== EVENTOS GERAIS =================== */
+    // Fecha chat ao clicar fora
+    document.addEventListener('click',(e)=>{
+      const insideChat = document.getElementById('chatBox')?.contains(e.target) || document.getElementById('chatToggle')?.contains(e.target);
+      if(!insideChat && document.getElementById('chatBox')?.style.display === 'flex') { document.getElementById('chatBox').style.display = 'none'; }
+    });
+
+    // Salva estado ao sair
+    window.addEventListener('beforeunload', ()=>{ salvarCarrinhoLocal(); salvarHistoria(); });
+
+    /* =================== FUNÇÕES EXTRAS / DEBUG =================== */
+    // Função para resetar tudo (apenas para desenvolvimento) - comente/remova em produção
+    function _resetTudo(){
+      if(!confirm('Resetar localStorage do site?')) return;
+      localStorage.removeItem('produtosLoja'); localStorage.removeItem('carrinho'); localStorage.removeItem('cartoesSalvos'); localStorage.removeItem('chatHistory'); localStorage.removeItem('adminLogado');
+      location.reload();
+    }
+  </script>
+</body>
+</html>
