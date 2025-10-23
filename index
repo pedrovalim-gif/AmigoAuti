@@ -365,7 +365,7 @@
       <div>
         <button class="btn" onclick="logoutAdmin()">Sair</button>
       </div>
-      <div class="muted">Credenciais padrão: <strong>admin / 1234</strong></div>
+      <div class="muted">Credenciais padrão: <strong>AmigoAuti_1 / Amigo@Auti1234</strong></div>
     </div>
 
     <h3 style="margin-top:1rem;">🧸 Produtos Cadastrados</h3>
@@ -741,7 +741,7 @@ Outras opções rápidas:
     function enviarTextoChat(t){ chatInput.value = t; enviarMensagem(); }
 
     /* =================== SISTEMA ADMINISTRATIVO =================== */
-    const ADMIN_USER = 'AdminAuti';
+    const ADMIN_USER = 'AmigoAuti_1';
     const ADMIN_PASS = 'Amigo@Auti1234';
 
     function loginAdmin(event){
@@ -846,7 +846,7 @@ Outras opções rápidas:
         div.className = 'produto-card';
         div.setAttribute('data-id', p.id);
         div.innerHTML = `<img src="${p.imagem}" alt="${p.nome}"><h3>${p.nome}</h3><p>${formatPriceBR(p.preco)}</p>
-          <div class="produto-meta">${esgotado ? "<span style='color:red; font-weight:700;'>Esgotado</span>" : `<button class="btn" onclick="adicionarAoCarrinho('${p.nome.replace(/'/g,"\\'")}', ${p.preco})">Adicionar</button>`}</div>`;
+          <div class="produto-meta">${esgotado ? "<span style='color:red; font-weight:700;'>Esgotado</span>" : `<button class="btn" onclick="adicionarAoCarrinho('${p.nome.replace(/'/g,"\'")}', ${p.preco})">Adicionar</button>`}</div>`;
         container.appendChild(div);
       });
     }
