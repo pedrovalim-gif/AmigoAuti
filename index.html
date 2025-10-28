@@ -138,6 +138,9 @@
     .btn{ background:var(--rosa-medio); color:var(--branco); padding:.5rem .8rem; border-radius:10px; border:none; cursor:pointer; font-weight:700; }
     .btn.secondary{ background:var(--azul-suave); color:var(--texto); }
     .btn.ghost{ background:transparent; border:1px solid rgba(0,0,0,0.06); color:var(--texto); }
+
+    /* small card for saved cards */
+    .cartao-salvo{ display:flex; justify-content:space-between; align-items:center; gap:8px; }
   </style>
 </head>
 <body>
@@ -160,7 +163,12 @@
     <!-- INÍCIO -->
     <section id="inicio" class="active">
       <div class="banner" role="region" aria-label="Banner inicial">
-        <div class="texto">
+        <div class="texto" style="flex:1;">
+          <!-- LOGO: usando caminho local fornecido por você -->
+          <div style="display:flex; justify-content:center; margin-bottom:.6rem;">
+            <img src="file:///C:/Users/Professor/Downloads/ChatGPT%20Image%2028%20de%20out.%20de%202025,%2013_54_49.png" alt="Logo Amigo Auti" style="max-width:180px; display:block; border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,0.12);">
+          </div>
+
           <h2>Bem-vindo à loja mais fofa do universo!</h2>
           <p>Amigurumis feitos à mão com carinho e um toque de galáxia ✨</p>
           <div style="margin-top:.75rem;">
@@ -171,19 +179,19 @@
         <div style="min-width:220px; max-width:300px;">
           <h3>✨ Destaques da Semana</h3>
           <div class="produtos" aria-hidden="true" style="grid-template-columns:1fr;">
-            <div class="produto-card">
+            <div class="produto-card" data-original="1">
               <img src="https://img.elo7.com.br/product/300x400/4860A9B/chaveiro-estrela-mario-bros-grande-em-amigurumi-geek.jpg" alt="Chaveiro Estrelinha">
               <h3>Chaveiro Estrelinha</h3>
               <p>R$ 15,00</p>
               <div class="produto-meta"><button class="btn" onclick="mostrarPagina('produtos')">Comprar</button></div>
             </div>
-            <div class="produto-card">
+            <div class="produto-card" data-original="2">
               <img src="https://i.etsystatic.com/16182273/r/il/7cbfe5/3307184637/il_340x270.3307184637_bb9k.jpg" alt="Polvo Reversível">
               <h3>Polvo Reversível</h3>
               <p>R$ 35,00</p>
               <div class="produto-meta"><button class="btn" onclick="mostrarPagina('produtos')">Comprar</button></div>
             </div>
-            <div class="produto-card">
+            <div class="produto-card" data-original="3">
               <img src="https://storage.googleapis.com/ribblr-disk/pics/82033/cover-31w18q4y76.jpg" alt="Dragãozinho do Cosmos">
               <h3>Dragãozinho do Cosmos</h3>
               <p>R$ 75,00</p>
@@ -203,21 +211,21 @@
           <img src="https://img.elo7.com.br/product/300x400/4860A9B/chaveiro-estrela-mario-bros-grande-em-amigurumi-geek.jpg" alt="Chaveiro Estrelinha">
           <h3>Chaveiro Estrelinha</h3>
           <p>R$ 15,00</p>
-          <div class="produto-meta"><button class="btn" onclick="adicionarAoCarrinho('Chaveiro Estrelinha', 15)">Adicionar</button></div>
+          <div class="produto-meta"><button class="btn add-cart" data-nome="Chaveiro Estrelinha" data-preco="15">Adicionar</button></div>
         </div>
 
         <div class="produto-card" data-original="2">
           <img src="https://i.etsystatic.com/16182273/r/il/7cbfe5/3307184637/il_340x270.3307184637_bb9k.jpg" alt="Polvo Reversível">
           <h3>Polvo Reversível</h3>
           <p>R$ 35,00</p>
-          <div class="produto-meta"><button class="btn" onclick="adicionarAoCarrinho('Polvo Reversível', 35)">Adicionar</button></div>
+          <div class="produto-meta"><button class="btn add-cart" data-nome="Polvo Reversível" data-preco="35">Adicionar</button></div>
         </div>
 
         <div class="produto-card" data-original="3">
           <img src="https://storage.googleapis.com/ribblr-disk/pics/82033/cover-31w18q4y76.jpg" alt="Dragãozinho do Cosmos">
           <h3>Dragãozinho do Cosmos</h3>
           <p>R$ 75,00</p>
-          <div class="produto-meta"><button class="btn" onclick="adicionarAoCarrinho('Dragãozinho do Cosmos', 75)">Adicionar</button></div>
+          <div class="produto-meta"><button class="btn add-cart" data-nome="Dragãozinho do Cosmos" data-preco="75">Adicionar</button></div>
         </div>
 
         <!-- Produtos do admin serão injetados dinamicamente -->
@@ -440,7 +448,7 @@
       clearTimeout(showToast._t);
       showToast._t = setTimeout(()=>{ toastEl.style.display='none'; }, ms);
     }
-    function formatPriceBR(v){ return 'R$ ' + v.toFixed(2).replace('.',','); }
+    function formatPriceBR(v){ return 'R$ ' + Number(v).toFixed(2).replace('.',','); }
 
     /* =================== ROTEAMENTO SIMPLES =================== */
     function mostrarPagina(id){
@@ -480,7 +488,7 @@
           li.innerHTML = `<div><div style="font-weight:700">${item.produto}</div><small class="muted">${formatPriceBR(item.preco)}</small></div>
             <div class="actions"><button class="btn secondary" onclick="removerItem(${i})">Remover</button></div>`;
           lista.appendChild(li);
-          soma += item.preco;
+          soma += Number(item.preco);
         });
       }
       total.textContent = `Total: ${formatPriceBR(soma)}`;
@@ -567,9 +575,11 @@
         div.style.padding = '8px';
         div.style.margin = '6px 0';
         div.style.borderRadius = '8px';
-        div.innerHTML = `<strong>${c.nome}</strong><br> Número: **** **** **** ${String(c.numero).slice(-4)}<br> Validade: ${c.validade}<br>
-          <button class="btn" style="margin-top:6px;" onclick="usarCartao(${i})">Usar este cartão</button>
-          <button class="btn secondary" style="margin-top:6px;" onclick="removerCartao(${i})">Excluir</button>`;
+        div.innerHTML = `<div><strong>${c.nome}</strong><br> Número: **** **** **** ${String(c.numero).slice(-4)}<br> Validade: ${c.validade}</div>
+          <div style="display:flex; flex-direction:column; gap:6px; align-items:flex-end;">
+            <button class="btn" style="min-width:110px;" onclick="usarCartao(${i})">Usar este cartão</button>
+            <button class="btn secondary" style="min-width:110px;" onclick="removerCartao(${i})">Excluir</button>
+          </div>`;
         container.appendChild(div);
       });
     }
@@ -610,7 +620,6 @@
     let chatState = 'idle'; // idle | awaitingQueueDecision | queued
     let queueTimeoutId = null;
     const ONE_HOUR_MS = 3600000; // 1 hora real (troque para teste se quiser)
-    // Para testar localmente, você pode alterar ONE_HOUR_MS = 10000 (10s)
 
     // Persistência do chat (pequeno histórico local)
     let chatHistory = JSON.parse(localStorage.getItem('chatHistory') || '[]');
@@ -671,12 +680,12 @@ Outras opções rápidas:
 
     function respostasPorPalavraChave(msg){
       const m = msg.toLowerCase();
-      if(m.includes('produto') || m.includes('produtos')) return `Temos diversos itens: Chaveiro Estrelinha (R$15), Polvo Reversível (R$35), Dragãozinho (R$75). Quer ver a vitrine? Abra a aba "Produtos".`;
-      if(m.includes('entrega') || m.includes('prazo')) return `O prazo de produção e envio costuma ser de 3-7 dias úteis, dependendo da disponibilidade. Quer que eu verifique disponibilidade?`;
+      if(m.includes('produto') || m.includes('produtos')) return `Temos diversos itens: Chaveiro Estrelinha (R$15), Polvo Reversível (R$35), Dragãozinho (R$75). Abra a aba "Produtos" para ver a vitrine.`;
+      if(m.includes('entrega') || m.includes('prazo')) return `O prazo de produção e envio costuma ser de 3-7 dias úteis, dependendo da disponibilidade.`;
       if(m.includes('pagamento') || m.includes('pix') || m.includes('cartão')) return `Aceitamos Cartão de Crédito/Débito e Pix. No checkout você pode escolher a forma de pagamento.`;
       if(m.includes('horario') || m.includes('atendimento')) return `Nosso horário de atendimento é das 9h às 18h (dias úteis).`;
       if(m === '1' || m === '2') return null;
-      return `Desculpe, não entendi completamente. Você pode digitar "produtos", "entrega", "pagamento", "horario" ou digitar 1/2 para entrar/recusar a fila.`;
+      return `Desculpe, não entendi completamente. Você pode digitar "produtos", "entrega", "pagamento", "horario" ou 1/2 para fila.`;
     }
 
     function agendarRespostaFila(){
@@ -746,8 +755,8 @@ Outras opções rápidas:
 
     function loginAdmin(event){
       event.preventDefault();
-      const user = document.getElementById('adminUser').value;
-      const pass = document.getElementById('adminPass').value;
+      const user = document.getElementById('adminUser').value.trim();
+      const pass = document.getElementById('adminPass').value.trim();
       if(user === ADMIN_USER && pass === ADMIN_PASS){
         localStorage.setItem('adminLogado','true');
         showToast('Administrador logado');
@@ -779,8 +788,9 @@ Outras opções rápidas:
       let produtos = JSON.parse(localStorage.getItem('produtosLoja') || '[]');
 
       if(id){
-        const index = produtos.findIndex(p => p.id == id);
-        if(index > -1) produtos[index] = { id, nome, imagem, preco, quantidade };
+        // se id foi salvo como string timestamp
+        const index = produtos.findIndex(p => String(p.id) === String(id));
+        if(index > -1) produtos[index] = { id: produtos[index].id, nome, imagem, preco, quantidade };
       } else {
         const novoId = Date.now();
         produtos.push({ id: novoId, nome, imagem, preco, quantidade });
@@ -799,6 +809,10 @@ Outras opções rápidas:
       const tabela = document.getElementById('tabela-produtos');
       const produtos = JSON.parse(localStorage.getItem('produtosLoja') || '[]');
       tabela.innerHTML = '';
+      if(produtos.length === 0){
+        tabela.innerHTML = '<tr><td colspan="6" class="muted">Nenhum produto cadastrado.</td></tr>';
+        return;
+      }
       produtos.forEach((p)=>{
         const status = p.quantidade > 0 ? 'Disponível' : 'Esgotado';
         const tr = document.createElement('tr');
@@ -814,7 +828,7 @@ Outras opções rápidas:
 
     function editarProduto(id){
       const produtos = JSON.parse(localStorage.getItem('produtosLoja') || '[]');
-      const p = produtos.find(p => p.id == id);
+      const p = produtos.find(p => String(p.id) === String(id));
       if(!p) return;
       document.getElementById('produtoId').value = p.id;
       document.getElementById('nomeProduto').value = p.nome;
@@ -828,7 +842,7 @@ Outras opções rápidas:
     function excluirProduto(id){
       if(!confirm('Tem certeza que deseja excluir este produto?')) return;
       let produtos = JSON.parse(localStorage.getItem('produtosLoja') || '[]');
-      produtos = produtos.filter(p => p.id != id);
+      produtos = produtos.filter(p => String(p.id) !== String(id));
       localStorage.setItem('produtosLoja', JSON.stringify(produtos));
       carregarProdutosAdmin();
       carregarProdutosLoja();
@@ -838,21 +852,43 @@ Outras opções rápidas:
     function carregarProdutosLoja(){
       const container = document.getElementById('vitrine');
       if(!container) return;
+      // preserve fixed original cards (data-original)
       const produtos = JSON.parse(localStorage.getItem('produtosLoja') || '[]');
+
+      // recreate container: start with original static elements
+      const originals = Array.from(container.querySelectorAll('[data-original]')).map(n => n.cloneNode(true));
+      container.innerHTML = '';
+      originals.forEach(n => container.appendChild(n));
+
       produtos.forEach(p => {
-        if(container.querySelector(`[data-id="${p.id}"]`)) return;
+        if(container.querySelector(`[data-id="${p.id}"]`)) return; // evita duplicar
         const esgotado = p.quantidade <= 0;
         const div = document.createElement('div');
         div.className = 'produto-card';
         div.setAttribute('data-id', p.id);
+        const botaoHTML = esgotado ? "<span style='color:red; font-weight:700;'>Esgotado</span>" : `<button class="btn add-cart" data-nome="${encodeURIComponent(p.nome)}" data-preco="${Number(p.preco)}">Adicionar</button>`;
         div.innerHTML = `<img src="${p.imagem}" alt="${p.nome}"><h3>${p.nome}</h3><p>${formatPriceBR(p.preco)}</p>
-          <div class="produto-meta">${esgotado ? "<span style='color:red; font-weight:700;'>Esgotado</span>" : `<button class="btn" onclick="adicionarAoCarrinho('${p.nome.replace(/'/g,"\'")}', ${p.preco})">Adicionar</button>`}</div>`;
+          <div class="produto-meta">${botaoHTML}</div>`;
         container.appendChild(div);
+      });
+
+      // reativar event listeners para botões add-cart (fixos e dinâmicos)
+      container.querySelectorAll('.add-cart').forEach(btn => {
+        // remove handlers duplicados se existirem
+        btn.replaceWith(btn.cloneNode(true));
+      });
+      // agora selecionar de novo (clonados sem listeners) e anexar listener
+      container.querySelectorAll('.add-cart').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const nomeEncoded = btn.getAttribute('data-nome') || '';
+          const nome = decodeURIComponent(nomeEncoded);
+          const preco = parseFloat(btn.getAttribute('data-preco') || '0');
+          adicionarAoCarrinho(nome, preco);
+        });
       });
     }
 
     /* =================== PRODUTOS FIXOS (exemplo) =================== */
-    // Também incluí uma lista inicial de produtos para demonstrar; admin pode adicionar mais.
     const produtosIniciais = [
       { nome: "Raposinha Fofa", preco: 79.90, img: "https://i.imgur.com/5uCzK9Z.png" },
       { nome: "Coelhinho Rosa", preco: 69.90, img: "https://i.imgur.com/Xqk92xZ.png" },
@@ -861,7 +897,6 @@ Outras opções rápidas:
     ];
 
     function popularProdutosIniciais(){
-      // Se não houver produtos em localStorage, adiciona alguns de exemplo
       let produtos = JSON.parse(localStorage.getItem('produtosLoja') || '[]');
       if(produtos.length === 0){
         produtos = produtosIniciais.map((p, idx) => ({ id: Date.now() + idx, nome: p.nome, imagem: p.img, preco: p.preco, quantidade: 10 }));
@@ -880,9 +915,6 @@ Outras opções rápidas:
       atualizarCarrinho();
       carregarCartoes();
       renderChatHistory();
-
-      // Mantém chat visível (inicialmente escondido)
-      // showToast('Bem-vindo — site carregado!');
     });
 
     /* =================== EVENTOS GERAIS =================== */
@@ -896,7 +928,6 @@ Outras opções rápidas:
     window.addEventListener('beforeunload', ()=>{ salvarCarrinhoLocal(); salvarHistoria(); });
 
     /* =================== FUNÇÕES EXTRAS / DEBUG =================== */
-    // Função para resetar tudo (apenas para desenvolvimento) - comente/remova em produção
     function _resetTudo(){
       if(!confirm('Resetar localStorage do site?')) return;
       localStorage.removeItem('produtosLoja'); localStorage.removeItem('carrinho'); localStorage.removeItem('cartoesSalvos'); localStorage.removeItem('chatHistory'); localStorage.removeItem('adminLogado');
